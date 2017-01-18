@@ -1,0 +1,440 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E300CDB11E2F520200D26E68 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDB01E2F520200D26E68 /* AppDelegate.m */; };
+		E300CDB41E2F520200D26E68 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDB31E2F520200D26E68 /* main.m */; };
+		E300CDB61E2F520200D26E68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E300CDB51E2F520200D26E68 /* Assets.xcassets */; };
+		E300CDB91E2F520200D26E68 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E300CDB71E2F520200D26E68 /* MainMenu.xib */; };
+		E300CDC31E2F521D00D26E68 /* TrackingTimeAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDC21E2F521D00D26E68 /* TrackingTimeAPI.m */; };
+		E300CDC81E2F523B00D26E68 /* LPHTTPRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDC61E2F523B00D26E68 /* LPHTTPRequestSerializer.m */; };
+		E300CDDD1E2F525B00D26E68 /* NSArray+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDCA1E2F525B00D26E68 /* NSArray+Utilities.m */; };
+		E300CDDE1E2F525B00D26E68 /* NSCharacterSet+QueryParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDCC1E2F525B00D26E68 /* NSCharacterSet+QueryParams.m */; };
+		E300CDDF1E2F525B00D26E68 /* NSDictionary+NSURL.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDCE1E2F525B00D26E68 /* NSDictionary+NSURL.m */; };
+		E300CDE01E2F525B00D26E68 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDD01E2F525B00D26E68 /* NSMutableArray+Shuffle.m */; };
+		E300CDE11E2F525B00D26E68 /* NSOrderedSet+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDD21E2F525B00D26E68 /* NSOrderedSet+Utilities.m */; };
+		E300CDE21E2F525B00D26E68 /* NSSet+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDD41E2F525B00D26E68 /* NSSet+Utilities.m */; };
+		E300CDE31E2F525B00D26E68 /* NSString+IDString.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDD61E2F525B00D26E68 /* NSString+IDString.m */; };
+		E300CDE41E2F525B00D26E68 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDD81E2F525B00D26E68 /* NSString+MD5.m */; };
+		E300CDEA1E2F531700D26E68 /* TTTask.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDE91E2F531700D26E68 /* TTTask.m */; };
+		E300CDED1E2F569800D26E68 /* TTTrackingEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDEC1E2F569800D26E68 /* TTTrackingEvent.m */; };
+		E300CDF01E2F56B200D26E68 /* TTDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDEF1E2F56B200D26E68 /* TTDataObject.m */; };
+		E300CDF31E2F579500D26E68 /* TTUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDF21E2F579500D26E68 /* TTUser.m */; };
+		E300CDF71E2F6A2500D26E68 /* TTTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDF61E2F6A2500D26E68 /* TTTimeManager.m */; };
+		E300CDF91E2FB6B800D26E68 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = E300CDF81E2FB6B800D26E68 /* icon.icns */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E300CDAC1E2F520200D26E68 /* TrackingTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackingTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E300CDAF1E2F520200D26E68 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E300CDB01E2F520200D26E68 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E300CDB31E2F520200D26E68 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E300CDB51E2F520200D26E68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E300CDB81E2F520200D26E68 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		E300CDBA1E2F520200D26E68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E300CDC11E2F521D00D26E68 /* TrackingTimeAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackingTimeAPI.h; sourceTree = "<group>"; };
+		E300CDC21E2F521D00D26E68 /* TrackingTimeAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackingTimeAPI.m; sourceTree = "<group>"; };
+		E300CDC51E2F523B00D26E68 /* LPHTTPRequestSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPHTTPRequestSerializer.h; sourceTree = "<group>"; };
+		E300CDC61E2F523B00D26E68 /* LPHTTPRequestSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPHTTPRequestSerializer.m; sourceTree = "<group>"; };
+		E300CDC71E2F523B00D26E68 /* LPJSONConvertable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPJSONConvertable.h; sourceTree = "<group>"; };
+		E300CDC91E2F525B00D26E68 /* NSArray+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utilities.h"; sourceTree = "<group>"; };
+		E300CDCA1E2F525B00D26E68 /* NSArray+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Utilities.m"; sourceTree = "<group>"; };
+		E300CDCB1E2F525B00D26E68 /* NSCharacterSet+QueryParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSCharacterSet+QueryParams.h"; sourceTree = "<group>"; };
+		E300CDCC1E2F525B00D26E68 /* NSCharacterSet+QueryParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSCharacterSet+QueryParams.m"; sourceTree = "<group>"; };
+		E300CDCD1E2F525B00D26E68 /* NSDictionary+NSURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NSURL.h"; sourceTree = "<group>"; };
+		E300CDCE1E2F525B00D26E68 /* NSDictionary+NSURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NSURL.m"; sourceTree = "<group>"; };
+		E300CDCF1E2F525B00D26E68 /* NSMutableArray+Shuffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Shuffle.h"; sourceTree = "<group>"; };
+		E300CDD01E2F525B00D26E68 /* NSMutableArray+Shuffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Shuffle.m"; sourceTree = "<group>"; };
+		E300CDD11E2F525B00D26E68 /* NSOrderedSet+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSOrderedSet+Utilities.h"; sourceTree = "<group>"; };
+		E300CDD21E2F525B00D26E68 /* NSOrderedSet+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSOrderedSet+Utilities.m"; sourceTree = "<group>"; };
+		E300CDD31E2F525B00D26E68 /* NSSet+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSet+Utilities.h"; sourceTree = "<group>"; };
+		E300CDD41E2F525B00D26E68 /* NSSet+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSet+Utilities.m"; sourceTree = "<group>"; };
+		E300CDD51E2F525B00D26E68 /* NSString+IDString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+IDString.h"; sourceTree = "<group>"; };
+		E300CDD61E2F525B00D26E68 /* NSString+IDString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+IDString.m"; sourceTree = "<group>"; };
+		E300CDD71E2F525B00D26E68 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
+		E300CDD81E2F525B00D26E68 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		E300CDE81E2F531700D26E68 /* TTTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTask.h; sourceTree = "<group>"; };
+		E300CDE91E2F531700D26E68 /* TTTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTask.m; sourceTree = "<group>"; };
+		E300CDEB1E2F569800D26E68 /* TTTrackingEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTrackingEvent.h; sourceTree = "<group>"; };
+		E300CDEC1E2F569800D26E68 /* TTTrackingEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTrackingEvent.m; sourceTree = "<group>"; };
+		E300CDEE1E2F56B200D26E68 /* TTDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDataObject.h; sourceTree = "<group>"; };
+		E300CDEF1E2F56B200D26E68 /* TTDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDataObject.m; sourceTree = "<group>"; };
+		E300CDF11E2F579500D26E68 /* TTUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUser.h; sourceTree = "<group>"; };
+		E300CDF21E2F579500D26E68 /* TTUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUser.m; sourceTree = "<group>"; };
+		E300CDF51E2F6A2500D26E68 /* TTTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimeManager.h; sourceTree = "<group>"; };
+		E300CDF61E2F6A2500D26E68 /* TTTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimeManager.m; sourceTree = "<group>"; };
+		E300CDF81E2FB6B800D26E68 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
+		E32389291E2FBB0500D80C68 /* TrackingTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TrackingTime.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E300CDA91E2F520200D26E68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E300CDA31E2F520200D26E68 = {
+			isa = PBXGroup;
+			children = (
+				E32389291E2FBB0500D80C68 /* TrackingTime.entitlements */,
+				E300CDAE1E2F520200D26E68 /* Menubar TrackingTime */,
+				E300CDAD1E2F520200D26E68 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E300CDAD1E2F520200D26E68 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E300CDAC1E2F520200D26E68 /* TrackingTime.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E300CDAE1E2F520200D26E68 /* Menubar TrackingTime */ = {
+			isa = PBXGroup;
+			children = (
+				E300CDC41E2F523300D26E68 /* Commons */,
+				E300CDE71E2F530000D26E68 /* Data */,
+				E300CDC01E2F520600D26E68 /* API */,
+				E300CDF41E2F6A0C00D26E68 /* TimeManager */,
+				E300CDAF1E2F520200D26E68 /* AppDelegate.h */,
+				E300CDB01E2F520200D26E68 /* AppDelegate.m */,
+				E300CDB51E2F520200D26E68 /* Assets.xcassets */,
+				E300CDF81E2FB6B800D26E68 /* icon.icns */,
+				E300CDB71E2F520200D26E68 /* MainMenu.xib */,
+				E300CDBA1E2F520200D26E68 /* Info.plist */,
+				E300CDB21E2F520200D26E68 /* Supporting Files */,
+			);
+			path = "Menubar TrackingTime";
+			sourceTree = "<group>";
+		};
+		E300CDB21E2F520200D26E68 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E300CDB31E2F520200D26E68 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E300CDC01E2F520600D26E68 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				E300CDC11E2F521D00D26E68 /* TrackingTimeAPI.h */,
+				E300CDC21E2F521D00D26E68 /* TrackingTimeAPI.m */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		E300CDC41E2F523300D26E68 /* Commons */ = {
+			isa = PBXGroup;
+			children = (
+				E300CDC91E2F525B00D26E68 /* NSArray+Utilities.h */,
+				E300CDCA1E2F525B00D26E68 /* NSArray+Utilities.m */,
+				E300CDCB1E2F525B00D26E68 /* NSCharacterSet+QueryParams.h */,
+				E300CDCC1E2F525B00D26E68 /* NSCharacterSet+QueryParams.m */,
+				E300CDCD1E2F525B00D26E68 /* NSDictionary+NSURL.h */,
+				E300CDCE1E2F525B00D26E68 /* NSDictionary+NSURL.m */,
+				E300CDCF1E2F525B00D26E68 /* NSMutableArray+Shuffle.h */,
+				E300CDD01E2F525B00D26E68 /* NSMutableArray+Shuffle.m */,
+				E300CDD11E2F525B00D26E68 /* NSOrderedSet+Utilities.h */,
+				E300CDD21E2F525B00D26E68 /* NSOrderedSet+Utilities.m */,
+				E300CDD31E2F525B00D26E68 /* NSSet+Utilities.h */,
+				E300CDD41E2F525B00D26E68 /* NSSet+Utilities.m */,
+				E300CDD51E2F525B00D26E68 /* NSString+IDString.h */,
+				E300CDD61E2F525B00D26E68 /* NSString+IDString.m */,
+				E300CDD71E2F525B00D26E68 /* NSString+MD5.h */,
+				E300CDD81E2F525B00D26E68 /* NSString+MD5.m */,
+				E300CDC51E2F523B00D26E68 /* LPHTTPRequestSerializer.h */,
+				E300CDC61E2F523B00D26E68 /* LPHTTPRequestSerializer.m */,
+				E300CDC71E2F523B00D26E68 /* LPJSONConvertable.h */,
+			);
+			name = Commons;
+			sourceTree = "<group>";
+		};
+		E300CDE71E2F530000D26E68 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				E300CDEE1E2F56B200D26E68 /* TTDataObject.h */,
+				E300CDEF1E2F56B200D26E68 /* TTDataObject.m */,
+				E300CDF11E2F579500D26E68 /* TTUser.h */,
+				E300CDF21E2F579500D26E68 /* TTUser.m */,
+				E300CDE81E2F531700D26E68 /* TTTask.h */,
+				E300CDE91E2F531700D26E68 /* TTTask.m */,
+				E300CDEB1E2F569800D26E68 /* TTTrackingEvent.h */,
+				E300CDEC1E2F569800D26E68 /* TTTrackingEvent.m */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+		E300CDF41E2F6A0C00D26E68 /* TimeManager */ = {
+			isa = PBXGroup;
+			children = (
+				E300CDF51E2F6A2500D26E68 /* TTTimeManager.h */,
+				E300CDF61E2F6A2500D26E68 /* TTTimeManager.m */,
+			);
+			name = TimeManager;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E300CDAB1E2F520200D26E68 /* TrackingTime */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E300CDBD1E2F520200D26E68 /* Build configuration list for PBXNativeTarget "TrackingTime" */;
+			buildPhases = (
+				E300CDA81E2F520200D26E68 /* Sources */,
+				E300CDA91E2F520200D26E68 /* Frameworks */,
+				E300CDAA1E2F520200D26E68 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TrackingTime;
+			productName = "Menubar TrackingTime";
+			productReference = E300CDAC1E2F520200D26E68 /* TrackingTime.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E300CDA41E2F520200D26E68 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = MusicSense;
+				TargetAttributes = {
+					E300CDAB1E2F520200D26E68 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = L27TBEH57A;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = E300CDA71E2F520200D26E68 /* Build configuration list for PBXProject "TrackingTime" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E300CDA31E2F520200D26E68;
+			productRefGroup = E300CDAD1E2F520200D26E68 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E300CDAB1E2F520200D26E68 /* TrackingTime */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E300CDAA1E2F520200D26E68 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E300CDB61E2F520200D26E68 /* Assets.xcassets in Resources */,
+				E300CDB91E2F520200D26E68 /* MainMenu.xib in Resources */,
+				E300CDF91E2FB6B800D26E68 /* icon.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E300CDA81E2F520200D26E68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E300CDDF1E2F525B00D26E68 /* NSDictionary+NSURL.m in Sources */,
+				E300CDB41E2F520200D26E68 /* main.m in Sources */,
+				E300CDE31E2F525B00D26E68 /* NSString+IDString.m in Sources */,
+				E300CDB11E2F520200D26E68 /* AppDelegate.m in Sources */,
+				E300CDDE1E2F525B00D26E68 /* NSCharacterSet+QueryParams.m in Sources */,
+				E300CDE21E2F525B00D26E68 /* NSSet+Utilities.m in Sources */,
+				E300CDEA1E2F531700D26E68 /* TTTask.m in Sources */,
+				E300CDE41E2F525B00D26E68 /* NSString+MD5.m in Sources */,
+				E300CDED1E2F569800D26E68 /* TTTrackingEvent.m in Sources */,
+				E300CDDD1E2F525B00D26E68 /* NSArray+Utilities.m in Sources */,
+				E300CDE01E2F525B00D26E68 /* NSMutableArray+Shuffle.m in Sources */,
+				E300CDE11E2F525B00D26E68 /* NSOrderedSet+Utilities.m in Sources */,
+				E300CDF01E2F56B200D26E68 /* TTDataObject.m in Sources */,
+				E300CDC31E2F521D00D26E68 /* TrackingTimeAPI.m in Sources */,
+				E300CDF31E2F579500D26E68 /* TTUser.m in Sources */,
+				E300CDF71E2F6A2500D26E68 /* TTTimeManager.m in Sources */,
+				E300CDC81E2F523B00D26E68 /* LPHTTPRequestSerializer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E300CDB71E2F520200D26E68 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E300CDB81E2F520200D26E68 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E300CDBB1E2F520200D26E68 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E300CDBC1E2F520200D26E68 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E300CDBE1E2F520200D26E68 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TrackingTime.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = L27TBEH57A;
+				INFOPLIST_FILE = "Menubar TrackingTime/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = me.musicsense.osx.TrackingTime;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E300CDBF1E2F520200D26E68 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TrackingTime.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = L27TBEH57A;
+				INFOPLIST_FILE = "Menubar TrackingTime/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = me.musicsense.osx.TrackingTime;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E300CDA71E2F520200D26E68 /* Build configuration list for PBXProject "TrackingTime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E300CDBB1E2F520200D26E68 /* Debug */,
+				E300CDBC1E2F520200D26E68 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E300CDBD1E2F520200D26E68 /* Build configuration list for PBXNativeTarget "TrackingTime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E300CDBE1E2F520200D26E68 /* Debug */,
+				E300CDBF1E2F520200D26E68 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E300CDA41E2F520200D26E68 /* Project object */;
+}

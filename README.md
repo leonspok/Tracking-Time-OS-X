@@ -1,2 +1,3 @@
-# Tracking-Time-OS-X
-Small menubar app for trackingtime.co
+# Tracking Time for macOS
+
+Small menubar app for [TrackingTime](https://trackingtime.co).
