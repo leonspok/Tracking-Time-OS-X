@@ -319,22 +319,19 @@
 		}
 		
 		[self.menu addItem:[NSMenuItem separatorItem]];
-	} else {
-		if ([[TTTimeManager sharedInstance].api authedUser] == nil) {
-			NSMenuItem *item = [NSMenuItem new];
-			item.title = @"You are not logged in";
-			item.enabled = NO;
-			[self.menu addItem:item];
-			
-			NSMenuItem *logInItem = [NSMenuItem new];
-			logInItem.title = @"Log in";
-			logInItem.enabled = YES;
-			logInItem.target = self;
-			logInItem.action = @selector(logIn:);
-			[self.menu addItem:logInItem];
-			return;
-		}
+	} else if ([[TTTimeManager sharedInstance].api authedUser] == nil) {
+		NSMenuItem *item = [NSMenuItem new];
+		item.title = @"You are not logged in";
+		item.enabled = NO;
+		[self.menu addItem:item];
 		
+		NSMenuItem *logInItem = [NSMenuItem new];
+		logInItem.title = @"Log in";
+		logInItem.enabled = YES;
+		logInItem.target = self;
+		logInItem.action = @selector(logIn:);
+		[self.menu addItem:logInItem];
+	} else {
 		NSMenuItem *item = [NSMenuItem new];
 		item.enabled = NO;
 		[self.menu addItem:item];
