@@ -44,6 +44,7 @@
 				  failure:(void (^)(NSError *error))failure;
 
 - (void)stopTrackingTask:(TTTask *)task
+				  atTime:(NSDate *)date
 				 success:(void (^)(TTTrackingEvent *event))success
 				 failure:(void (^)(NSError *error))failure;
 

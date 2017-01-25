@@ -30,7 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E300CDAC1E2F520200D26E68 /* TrackingTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackingTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E300CDAC1E2F520200D26E68 /* Tracking Time.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tracking Time.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E300CDAF1E2F520200D26E68 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E300CDB01E2F520200D26E68 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E300CDB31E2F520200D26E68 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -95,7 +95,7 @@
 		E300CDAD1E2F520200D26E68 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E300CDAC1E2F520200D26E68 /* TrackingTime.app */,
+				E300CDAC1E2F520200D26E68 /* Tracking Time.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -188,9 +188,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E300CDAB1E2F520200D26E68 /* TrackingTime */ = {
+		E300CDAB1E2F520200D26E68 /* Tracking Time */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E300CDBD1E2F520200D26E68 /* Build configuration list for PBXNativeTarget "TrackingTime" */;
+			buildConfigurationList = E300CDBD1E2F520200D26E68 /* Build configuration list for PBXNativeTarget "Tracking Time" */;
 			buildPhases = (
 				E300CDA81E2F520200D26E68 /* Sources */,
 				E300CDA91E2F520200D26E68 /* Frameworks */,
@@ -200,9 +200,9 @@
 			);
 			dependencies = (
 			);
-			name = TrackingTime;
+			name = "Tracking Time";
 			productName = "Menubar TrackingTime";
-			productReference = E300CDAC1E2F520200D26E68 /* TrackingTime.app */;
+			productReference = E300CDAC1E2F520200D26E68 /* Tracking Time.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -226,7 +226,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E300CDA71E2F520200D26E68 /* Build configuration list for PBXProject "TrackingTime" */;
+			buildConfigurationList = E300CDA71E2F520200D26E68 /* Build configuration list for PBXProject "Tracking Time" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -239,7 +239,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E300CDAB1E2F520200D26E68 /* TrackingTime */,
+				E300CDAB1E2F520200D26E68 /* Tracking Time */,
 			);
 		};
 /* End PBXProject section */
@@ -416,7 +416,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E300CDA71E2F520200D26E68 /* Build configuration list for PBXProject "TrackingTime" */ = {
+		E300CDA71E2F520200D26E68 /* Build configuration list for PBXProject "Tracking Time" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E300CDBB1E2F520200D26E68 /* Debug */,
@@ -425,7 +425,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E300CDBD1E2F520200D26E68 /* Build configuration list for PBXNativeTarget "TrackingTime" */ = {
+		E300CDBD1E2F520200D26E68 /* Build configuration list for PBXNativeTarget "Tracking Time" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E300CDBE1E2F520200D26E68 /* Debug */,

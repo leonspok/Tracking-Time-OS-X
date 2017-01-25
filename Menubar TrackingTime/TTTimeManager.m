@@ -12,6 +12,7 @@
 @property (nonatomic, strong, readwrite) TrackingTimeAPI *api;
 @property (nonatomic, getter=isReady, readwrite) BOOL ready;
 @property (nonatomic, getter=isLoading, readwrite) BOOL loading;
+@property (nonatomic, strong, readwrite) NSDate *lastSyncTimerDate;
 
 @property (nonatomic, readwrite) TTTrackingEvent *currentTrackingEvent;
 @property (nonatomic, readwrite) TTTask *currentTrackingTask;
@@ -49,6 +50,7 @@
 		if (!success) {
 			self.currentTrackingEvent = nil;
 			self.currentTrackingTask = nil;
+			self.lastSyncTimerDate = nil;
 			self.ready = YES;
 			self.loading = NO;
 			if (completion) {
@@ -115,6 +117,7 @@
 	[self.api startTrackingTask:task success:^(TTTrackingEvent *event) {
 		self.currentTrackingTask = task;
 		self.currentTrackingEvent = event;
+		self.lastSyncTimerDate = [NSDate date];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (self.syncTimer) {
@@ -134,20 +137,23 @@
 	if (self.currentTrackingTask && self.currentTrackingEvent) {
 		[self.api syncTask:self.currentTrackingTask withEvent:self.currentTrackingEvent success:^(TTTrackingEvent *event) {
 			self.currentTrackingEvent = event;
+			self.lastSyncTimerDate = [NSDate date];
 		} failure:nil];
 	}
 }
 
-- (void)stopTrackingSuccess:(void (^)())success
-					failure:(void (^)(NSError *error))failure {
+- (void)stopTrackingAtTime:(NSDate *)time
+				   success:(void (^)())success
+				   failure:(void (^)(NSError *error))failure {
 	if (!self.currentTrackingTask) {
 		if (success) {
 			success();
 		}
 	}
-	[self.api stopTrackingTask:self.currentTrackingTask success:^(TTTrackingEvent *event) {
+	[self.api stopTrackingTask:self.currentTrackingTask atTime:time success:^(TTTrackingEvent *event) {
 		self.currentTrackingTask = nil;
 		self.currentTrackingEvent = nil;
+		self.lastSyncTimerDate = nil;
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (self.syncTimer) {
 				[self.syncTimer invalidate];
@@ -158,6 +164,11 @@
 			success();
 		}
 	} failure:failure];
+}
+
+- (void)stopTrackingSuccess:(void (^)())success
+					failure:(void (^)(NSError *error))failure {
+	[self stopTrackingAtTime:[NSDate date] success:success failure:failure];
 }
 
 @end

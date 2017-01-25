@@ -15,8 +15,9 @@
 @property (nonatomic, getter=isReady, readonly) BOOL ready;
 @property (nonatomic, getter=isLoading, readonly) BOOL loading;
 
-@property (nonatomic, readonly) TTTrackingEvent *currentTrackingEvent;
-@property (nonatomic, readonly) TTTask *currentTrackingTask;
+@property (nonatomic, strong, readonly) TTTrackingEvent *currentTrackingEvent;
+@property (nonatomic, strong, readonly) TTTask *currentTrackingTask;
+@property (nonatomic, strong, readonly) NSDate *lastSyncTimerDate;
 
 @property (nonatomic, readonly) NSArray<TTTask *> *alltasks;
 
@@ -37,5 +38,9 @@
 
 - (void)stopTrackingSuccess:(void (^)())success
 					failure:(void (^)(NSError *error))failure;
+
+- (void)stopTrackingAtTime:(NSDate *)time
+				   success:(void (^)())success
+				   failure:(void (^)(NSError *error))failure;
 
 @end

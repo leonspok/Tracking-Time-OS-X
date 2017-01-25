@@ -394,6 +394,7 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 }
 
 - (void)stopTrackingTask:(TTTask *)task
+				  atTime:(NSDate *)stopDate
 				 success:(void (^)(TTTrackingEvent *event))success
 				 failure:(void (^)(NSError *error))failure {
 	if (!task.uid) {
@@ -407,10 +408,10 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 	
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+	NSString *date = [dateFormatter stringFromDate:stopDate];
 	
-	NSString *date = [dateFormatter stringFromDate:[NSDate date]];
 	dateFormatter.dateFormat = @"XXX";
-	NSString *timezone = [[NSString stringWithFormat:@"GMT%@", [dateFormatter stringFromDate:[NSDate date]]] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+	NSString *timezone = [[NSString stringWithFormat:@"GMT%@", [dateFormatter stringFromDate:stopDate]] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 	
 	NSDictionary *params = @{@"date": date,
 							 @"timezone": timezone};

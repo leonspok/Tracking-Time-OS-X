@@ -12,6 +12,7 @@
 @interface AppDelegate () <NSMenuDelegate, NSUserNotificationCenterDelegate>
 
 @property (strong, nonatomic) NSStatusItem *statusItem;
+@property (weak) IBOutlet NSMenu *dummyEditMenu;
 
 @property (weak) IBOutlet NSWindow *window;
 @property (weak) IBOutlet NSMenu *menu;
@@ -25,12 +26,23 @@
 @property (nonatomic, strong) NSTimer *reloadInfoTimer;
 @property (nonatomic, strong) NSTimer *reloadTrackingInfoTimer;
 
+@property (nonatomic) BOOL sleeping;
+
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	self.menu.delegate = self;
+	self.sleeping = NO;
+	[NSApp setMainMenu:self.dummyEditMenu];
+	
+	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+														   selector:@selector(applicationDidWakeUp)
+															   name:NSWorkspaceDidWakeNotification object:nil];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+														   selector:@selector(applicationWillSleep)
+															   name:NSWorkspaceWillSleepNotification object:nil];
 	
 	self.trackingInfoTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(setTrackingInfo) userInfo:nil repeats:YES];
 	[[NSRunLoop mainRunLoop] addTimer:self.trackingInfoTimer forMode:NSEventTrackingRunLoopMode];
@@ -51,6 +63,15 @@
 	}];
 }
 
+- (void)applicationDidWakeUp {
+	self.sleeping = NO;
+	[self stopTrackingIfNeeded];
+}
+
+- (void)applicationWillSleep {
+	self.sleeping = YES;
+}
+
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
 	[[TTTimeManager sharedInstance] stopTrackingSuccess:nil failure:nil];
 }
@@ -66,12 +87,12 @@
 				NSUserNotification *notification = [[NSUserNotification alloc] init];
 				notification.title = [TTTimeManager sharedInstance].currentTrackingTask.name;
 				notification.informativeText = @"Started tracking";
-				[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+				[self postNotification:notification];
 			} else if (wasTracking && [TTTimeManager sharedInstance].currentTrackingEvent == nil) {
 				NSUserNotification *notification = [[NSUserNotification alloc] init];
 				notification.title = wasTrackingTask;
 				notification.informativeText = @"Stopped tracking";
-				[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+				[self postNotification:notification];
 			}
 		});
 	}];
@@ -87,12 +108,12 @@
 					NSUserNotification *notification = [[NSUserNotification alloc] init];
 					notification.title = [TTTimeManager sharedInstance].currentTrackingTask.name;
 					notification.informativeText = @"Started tracking";
-					[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+					[self postNotification:notification];
 				} else if (wasTracking && [TTTimeManager sharedInstance].currentTrackingEvent == nil) {
 					NSUserNotification *notification = [[NSUserNotification alloc] init];
 					notification.title = wasTrackingTask;
 					notification.informativeText = @"Stopped tracking";
-					[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+					[self postNotification:notification];
 				}
 			});
 		}
@@ -100,21 +121,55 @@
 }
 
 - (void)setTrackingInfo {
+	[self stopTrackingIfNeeded];
 	if ([TTTimeManager sharedInstance].currentTrackingEvent) {
 		NSInteger seconds = round([[NSDate date] timeIntervalSinceDate:[TTTimeManager sharedInstance].currentTrackingEvent.dateStart]);
 		self.trackingInfoItem.title = [NSString stringWithFormat:@"%02d:%02d:%02d", (int)seconds/3600, (int)(seconds%3600)/60, (int)seconds%60];
 		NSImage *menuBarLogo = [NSImage imageNamed:@"stopIcon"];
 		[menuBarLogo setTemplate:YES];
 		self.statusItem.image = menuBarLogo;
+		if (seconds < 60) {
+			self.statusItem.title = [NSString stringWithFormat:@"%lds", (long)seconds];
+		} else if (seconds < 3600) {
+			self.statusItem.title = [NSString stringWithFormat:@"%ldm", (long)seconds/60];
+		} else {
+			self.statusItem.title = [NSString stringWithFormat:@"%ldh%ldm", (long)seconds/3600, (long)(seconds%3600)/60];
+		}
 	} else {
 		self.trackingInfoItem.title = @"No tracking";
 		NSImage *menuBarLogo = [NSImage imageNamed:@"startIcon"];
 		[menuBarLogo setTemplate:YES];
 		self.statusItem.image = menuBarLogo;
+		self.statusItem.title = nil;
+	}
+}
+
+- (void)stopTrackingIfNeeded {
+	NSDate *lastSyncDate = [TTTimeManager sharedInstance].lastSyncTimerDate;
+	NSString *wasTrackingTask = [TTTimeManager sharedInstance].currentTrackingTask.name;
+	if (wasTrackingTask && lastSyncDate && [[NSDate date] timeIntervalSinceDate:lastSyncDate] >= 3600) {
+		NSLog(@"Stopping: %@", lastSyncDate);
+		[[TTTimeManager sharedInstance] stopTrackingAtTime:lastSyncDate success:^{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self setTrackingInfo];
+				NSUserNotification *notification = [[NSUserNotification alloc] init];
+				notification.title = wasTrackingTask;
+				notification.informativeText = @"Tracking stopped";
+				[self postNotification:notification];
+			});
+		} failure:^(NSError *error) {
+			NSLog(@"%@", error);
+		}];
 	}
 }
 
 #pragma mark Actions
+
+- (void)postNotification:(NSUserNotification *)notification {
+	if (!self.sleeping) {
+		[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+	}
+}
 
 - (IBAction)logIn:(id)sender {
 	NSAlert *alert = [[NSAlert alloc] init];
@@ -134,14 +189,14 @@
 					NSUserNotification *notification = [[NSUserNotification alloc] init];
 					notification.title = @"You are logged in";
 					notification.informativeText = [NSString stringWithFormat:@"%@ %@", [TTTimeManager sharedInstance].api.authedUser.name, [TTTimeManager sharedInstance].api.authedUser.surname];
-					[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+					[self postNotification:notification];
 				});
 				[[TTTimeManager sharedInstance] loadAllDataCompletion:^(BOOL success) {
 					if (success) {
 						dispatch_async(dispatch_get_main_queue(), ^{
 							NSUserNotification *notification = [[NSUserNotification alloc] init];
 							notification.title = @"TrackingTime is ready";
-							[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+							[self postNotification:notification];
 						});
 					} 
 				}];
@@ -149,7 +204,7 @@
 				dispatch_async(dispatch_get_main_queue(), ^{
 					NSUserNotification *notification = [[NSUserNotification alloc] init];
 					notification.title = @"Log in failed";
-					[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+					[self postNotification:notification];
 				});
 			}
 		}];
@@ -172,7 +227,7 @@
 			NSUserNotification *notification = [[NSUserNotification alloc] init];
 			notification.title = wasTrackingTask;
 			notification.informativeText = @"Tracking stopped";
-			[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+			[self postNotification:notification];
 		});
 	} failure:^(NSError *error) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -197,7 +252,7 @@
 			NSUserNotification *notification = [[NSUserNotification alloc] init];
 			notification.informativeText = @"Started tracking";
 			notification.title = task.name;
-			[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+			[self postNotification:notification];
 		});
 	} failure:^(NSError *error) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -238,7 +293,7 @@
 					NSUserNotification *notification = [[NSUserNotification alloc] init];
 					notification.informativeText = @"Started tracking";
 					notification.title = task.name;
-					[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+					[self postNotification:notification];
 				});
 			} failure:^(NSError *error) {
 				dispatch_async(dispatch_get_main_queue(), ^{
@@ -266,7 +321,7 @@
 				NSUserNotification *notification = [[NSUserNotification alloc] init];
 				notification.informativeText = @"Task created";
 				notification.title = task.name;
-				[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+				[self postNotification:notification];
 			});
 		} failure:^(NSError *error) {
 			dispatch_async(dispatch_get_main_queue(), ^{
@@ -307,7 +362,7 @@
 						NSUserNotification *notification = [[NSUserNotification alloc] init];
 						notification.title = @"TrackingTime is ready";
 						notification.informativeText = @"You can start tracking your tasks";
-						[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+						[self postNotification:notification];
 					});
 				}
 			}];
