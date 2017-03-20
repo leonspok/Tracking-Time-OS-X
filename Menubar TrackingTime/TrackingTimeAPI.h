@@ -28,6 +28,10 @@
 - (void)getListOfUsers:(void (^)(NSArray<TTUser *> *users))success
 			   failure:(void (^)(NSError *error))failure;
 
+- (void)getListOfTasksOfUser:(TTUser *)user
+					 success:(void (^)(NSArray<TTTask *> *tasks))success
+					 failure:(void (^)(NSError *error))failure;
+
 - (void)getListOfTasks:(void (^)(NSArray<TTTask *> *tasks))success
 			   failure:(void (^)(NSError *error))failure;
 

@@ -175,6 +175,57 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 	}] resume];
 }
 
+- (void)getListOfTasksOfUser:(TTUser *)user
+					 success:(void (^)(NSArray<TTTask *> *tasks))success
+					 failure:(void (^)(NSError *error))failure {
+	if (!user.uid) {
+		if (failure) {
+			failure([NSError errorWithDomain:NSStringFromClass(self.class) code:2 userInfo:@{@"message": @"no user id"}]);
+		}
+		return;
+	}
+	
+	NSMutableURLRequest *request = [self requestWithMethod:@"GET" url:[NSURL URLWithString:[NSString stringWithFormat:@"%@/users/%@/tasks", kBaseURL, [user.uid stringValue]]] params:@{@"filter": @"ACTIVE"}];
+	
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		if (error) {
+			if (failure) {
+				failure(error);
+			}
+		} else {
+			NSError *jsonError;
+			NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+			if (jsonError) {
+				if (failure) {
+					failure(jsonError);
+				}
+			} else {
+				if ([[json objectForKey:@"response"] isKindOfClass:NSDictionary.class]) {
+					NSDictionary *response = [json objectForKey:@"response"];
+					if (![[response objectForKey:@"status"] isEqual:@200]) {
+						if (failure) {
+							failure([NSError errorWithDomain:NSStringFromClass(self.class) code:[[response objectForKey:@"status"] integerValue] userInfo:response]);
+						}
+						return;
+					}
+					
+					NSArray<NSDictionary *> *projects = [[json objectForKey:@"data"] objectForKey:@"projects"];
+					NSMutableArray *tasks = [NSMutableArray array];
+					for (NSDictionary *project in projects) {
+						if ([[project objectForKey:@"tasks"] isKindOfClass:NSArray.class]) {
+							[tasks addObjectsFromArray:[TTTask createObjectsFromJSON:[project objectForKey:@"tasks"]]];
+						}
+					}
+					
+					if (success) {
+						success(tasks);
+					}
+				}
+			}
+		}
+	}] resume];
+}
+
 - (void)getListOfTasks:(void (^)(NSArray<TTTask *> *tasks))success
 			   failure:(void (^)(NSError *error))failure {
 	

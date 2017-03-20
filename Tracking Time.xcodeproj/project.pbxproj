@@ -392,7 +392,7 @@
 				DEVELOPMENT_TEAM = L27TBEH57A;
 				INFOPLIST_FILE = "Menubar TrackingTime/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = me.musicsense.osx.TrackingTime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -407,7 +407,7 @@
 				DEVELOPMENT_TEAM = L27TBEH57A;
 				INFOPLIST_FILE = "Menubar TrackingTime/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = me.musicsense.osx.TrackingTime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

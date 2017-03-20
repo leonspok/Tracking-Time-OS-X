@@ -269,6 +269,19 @@
 	}];
 }
 
+- (IBAction)toggleTasksFiltering:(id)sender {
+	[TTTimeManager sharedInstance].showOnlyMyTasks = ![TTTimeManager sharedInstance].showOnlyMyTasks;
+	[[TTTimeManager sharedInstance] loadAllDataCompletion:^(BOOL success) {
+		if (success) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				NSUserNotification *notification = [[NSUserNotification alloc] init];
+				notification.title = @"TrackingTime is ready";
+				[self postNotification:notification];
+			});
+		}
+	}];
+}
+
 - (IBAction)createNewTask:(NSMenuItem *)sender {
 	NSAlert *alert = [[NSAlert alloc] init];
 	alert.alertStyle = NSAlertStyleInformational;
@@ -460,6 +473,14 @@
 		}
 		
 		[self.menu addItem:[NSMenuItem separatorItem]];
+		
+		NSMenuItem *filterTasksItem = [NSMenuItem new];
+		filterTasksItem.title = @"Show only my tasks";
+		filterTasksItem.enabled = YES;
+		filterTasksItem.target = self;
+		filterTasksItem.action = @selector(toggleTasksFiltering:);
+		filterTasksItem.state = [TTTimeManager sharedInstance].showOnlyMyTasks? NSOnState : NSOffState;
+		[self.menu addItem:filterTasksItem];
 		
 		NSMenuItem *logoutItem = [NSMenuItem new];
 		logoutItem.title = @"Log out";

@@ -43,6 +43,15 @@
 	return self;
 }
 
+- (void)setShowOnlyMyTasks:(BOOL)showOnlyMyTasks {
+	[[NSUserDefaults standardUserDefaults] setBool:showOnlyMyTasks forKey:@"Show only my tasks"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (BOOL)showOnlyMyTasks {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:@"Show only my tasks"];
+}
+
 - (void)loadAllDataCompletion:(void (^)(BOOL success))completion {
 	self.ready = NO;
 	self.loading = YES;
@@ -57,7 +66,7 @@
 				completion(YES);
 			}
 		} else {
-			[self.api getListOfTasks:^(NSArray<TTTask *> *tasks) {
+			void (^tasksLoaded)(NSArray<TTTask *> *tasks) = ^(NSArray<TTTask *> *tasks) {
 				self.alltasks = tasks;
 				[self.api getTrackingTask:^(TTTask *task, TTTrackingEvent *event) {
 					self.currentTrackingEvent = event;
@@ -73,12 +82,23 @@
 						completion(NO);
 					}
 				}];
-			} failure:^(NSError *error) {
-				self.loading = NO;
-				if (completion) {
-					completion(NO);
-				}
-			}];
+			};
+			
+			if (self.showOnlyMyTasks) {
+				[self.api getListOfTasksOfUser:self.api.authedUser success:tasksLoaded failure:^(NSError *error) {
+					self.loading = NO;
+					if (completion) {
+						completion(NO);
+					}
+				}];
+			} else {
+				[self.api getListOfTasks:tasksLoaded failure:^(NSError *error) {
+					self.loading = NO;
+					if (completion) {
+						completion(NO);
+					}
+				}];
+			}
 		}
 	}];
 }

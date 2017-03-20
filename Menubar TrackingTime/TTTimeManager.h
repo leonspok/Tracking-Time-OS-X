@@ -20,6 +20,7 @@
 @property (nonatomic, strong, readonly) NSDate *lastSyncTimerDate;
 
 @property (nonatomic, readonly) NSArray<TTTask *> *alltasks;
+@property (nonatomic) BOOL showOnlyMyTasks;
 
 + (instancetype)sharedInstance;
 
