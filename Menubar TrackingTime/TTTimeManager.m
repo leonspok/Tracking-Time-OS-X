@@ -18,6 +18,7 @@
 @property (nonatomic, readwrite) TTTask *currentTrackingTask;
 
 @property (nonatomic, readwrite) NSArray<TTTask *> *alltasks;
+@property (nonatomic, readwrite) NSArray<TTProject *> *allProjects;
 
 @property (nonatomic, strong) NSTimer *syncTimer;
 
@@ -43,15 +44,6 @@
 	return self;
 }
 
-- (void)setShowOnlyMyTasks:(BOOL)showOnlyMyTasks {
-	[[NSUserDefaults standardUserDefaults] setBool:showOnlyMyTasks forKey:@"Show only my tasks"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (BOOL)showOnlyMyTasks {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:@"Show only my tasks"];
-}
-
 - (void)loadAllDataCompletion:(void (^)(BOOL success))completion {
 	self.ready = NO;
 	self.loading = YES;
@@ -66,39 +58,50 @@
 				completion(YES);
 			}
 		} else {
-			void (^tasksLoaded)(NSArray<TTTask *> *tasks) = ^(NSArray<TTTask *> *tasks) {
-				self.alltasks = tasks;
-				[self.api getTrackingTask:^(TTTask *task, TTTrackingEvent *event) {
-					self.currentTrackingEvent = event;
-					self.currentTrackingTask = task;
-					self.ready = YES;
-					self.loading = NO;
-					if (completion) {
-						completion(YES);
+			NSMutableArray<NSNumber *> *loadedStates = [NSMutableArray arrayWithObjects:@0, @0, @0, nil];
+			
+			void (^callCompletionIfNeeded)() = ^{
+				BOOL success = YES;
+				for (NSNumber *state in loadedStates) {
+					if ([state integerValue] == 0) {
+						return;
 					}
-				} failure:^(NSError *error) {
-					self.loading = NO;
-					if (completion) {
-						completion(NO);
-					}
-				}];
+					success *= ([state integerValue] == 1);
+				}
+				self.ready = YES;
+				self.loading = NO;
+				if (completion) {
+					completion(success);
+				}
 			};
 			
-			if (self.showOnlyMyTasks) {
-				[self.api getListOfTasksOfUser:self.api.authedUser success:tasksLoaded failure:^(NSError *error) {
-					self.loading = NO;
-					if (completion) {
-						completion(NO);
-					}
-				}];
-			} else {
-				[self.api getListOfTasks:tasksLoaded failure:^(NSError *error) {
-					self.loading = NO;
-					if (completion) {
-						completion(NO);
-					}
-				}];
-			}
+			[self.api getListOfTasksOfUser:self.api.authedUser success:^(NSArray<TTTask *> *tasks) {
+				self.alltasks = tasks;
+				loadedStates[0] = @1;
+				callCompletionIfNeeded();
+			} failure:^(NSError *error) {
+				loadedStates[0] = @(-1);
+				callCompletionIfNeeded();
+			}];
+			
+			[self.api getTrackingTask:^(TTTask *task, TTTrackingEvent *event) {
+				self.currentTrackingEvent = event;
+				self.currentTrackingTask = task;
+				loadedStates[1] = @1;
+				callCompletionIfNeeded();
+			} failure:^(NSError *error) {
+				loadedStates[1] = @(-1);
+				callCompletionIfNeeded();
+			}];
+			
+			[self.api getListOfProjects:^(NSArray<TTProject *> *projects) {
+				self.allProjects = projects;
+				loadedStates[2] = @1;
+				callCompletionIfNeeded();
+			} failure:^(NSError *error) {
+				loadedStates[2] = @(-1);
+				callCompletionIfNeeded();
+			}];
 		}
 	}];
 }

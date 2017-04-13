@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TTUser.h"
+#import "TTProject.h"
 #import "TTTask.h"
 #import "TTTrackingEvent.h"
 
@@ -27,6 +28,9 @@
 
 - (void)getListOfUsers:(void (^)(NSArray<TTUser *> *users))success
 			   failure:(void (^)(NSError *error))failure;
+
+- (void)getListOfProjects:(void (^)(NSArray<TTProject *> *projects))success
+				  failure:(void (^)(NSError *error))failure;
 
 - (void)getListOfTasksOfUser:(TTUser *)user
 					 success:(void (^)(NSArray<TTTask *> *tasks))success

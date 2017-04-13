@@ -27,6 +27,7 @@
 		E300CDF31E2F579500D26E68 /* TTUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDF21E2F579500D26E68 /* TTUser.m */; };
 		E300CDF71E2F6A2500D26E68 /* TTTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDF61E2F6A2500D26E68 /* TTTimeManager.m */; };
 		E300CDF91E2FB6B800D26E68 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = E300CDF81E2FB6B800D26E68 /* icon.icns */; };
+		E327B17E1E9F8A15003A5078 /* TTProject.m in Sources */ = {isa = PBXBuildFile; fileRef = E327B17D1E9F8A15003A5078 /* TTProject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,8 @@
 		E300CDF61E2F6A2500D26E68 /* TTTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimeManager.m; sourceTree = "<group>"; };
 		E300CDF81E2FB6B800D26E68 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		E32389291E2FBB0500D80C68 /* TrackingTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TrackingTime.entitlements; sourceTree = "<group>"; };
+		E327B17C1E9F8A15003A5078 /* TTProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTProject.h; sourceTree = "<group>"; };
+		E327B17D1E9F8A15003A5078 /* TTProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTProject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +171,8 @@
 				E300CDEF1E2F56B200D26E68 /* TTDataObject.m */,
 				E300CDF11E2F579500D26E68 /* TTUser.h */,
 				E300CDF21E2F579500D26E68 /* TTUser.m */,
+				E327B17C1E9F8A15003A5078 /* TTProject.h */,
+				E327B17D1E9F8A15003A5078 /* TTProject.m */,
 				E300CDE81E2F531700D26E68 /* TTTask.h */,
 				E300CDE91E2F531700D26E68 /* TTTask.m */,
 				E300CDEB1E2F569800D26E68 /* TTTrackingEvent.h */,
@@ -273,6 +278,7 @@
 				E300CDED1E2F569800D26E68 /* TTTrackingEvent.m in Sources */,
 				E300CDDD1E2F525B00D26E68 /* NSArray+Utilities.m in Sources */,
 				E300CDE01E2F525B00D26E68 /* NSMutableArray+Shuffle.m in Sources */,
+				E327B17E1E9F8A15003A5078 /* TTProject.m in Sources */,
 				E300CDE11E2F525B00D26E68 /* NSOrderedSet+Utilities.m in Sources */,
 				E300CDF01E2F56B200D26E68 /* TTDataObject.m in Sources */,
 				E300CDC31E2F521D00D26E68 /* TrackingTimeAPI.m in Sources */,

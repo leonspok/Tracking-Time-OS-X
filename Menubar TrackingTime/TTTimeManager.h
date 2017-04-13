@@ -19,8 +19,8 @@
 @property (nonatomic, strong, readonly) TTTask *currentTrackingTask;
 @property (nonatomic, strong, readonly) NSDate *lastSyncTimerDate;
 
+@property (nonatomic, readonly) NSArray<TTProject *> *allProjects;
 @property (nonatomic, readonly) NSArray<TTTask *> *alltasks;
-@property (nonatomic) BOOL showOnlyMyTasks;
 
 + (instancetype)sharedInstance;
 

@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "TTTimeManager.h"
+#import "NSArray+Utilities.h"
 
 @interface AppDelegate () <NSMenuDelegate, NSUserNotificationCenterDelegate>
 
@@ -46,7 +47,8 @@
 	
 	self.trackingInfoTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(setTrackingInfo) userInfo:nil repeats:YES];
 	[[NSRunLoop mainRunLoop] addTimer:self.trackingInfoTimer forMode:NSEventTrackingRunLoopMode];
-	self.reloadInfoTimer = [NSTimer scheduledTimerWithTimeInterval:3*60.0f target:self selector:@selector(reloadInfoTimer) userInfo:nil repeats:YES];
+	self.reloadInfoTimer = [NSTimer scheduledTimerWithTimeInterval:3*60.0f target:self selector:@selector(reloadInfo) userInfo:nil repeats:YES];
+	[[NSRunLoop mainRunLoop] addTimer:self.reloadInfoTimer forMode:NSEventTrackingRunLoopMode];
 	self.reloadTrackingInfoTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadCurrentTrackingTask) userInfo:nil repeats:YES];
 	[[NSRunLoop mainRunLoop] addTimer:self.reloadTrackingInfoTimer forMode:NSEventTrackingRunLoopMode];
 	
@@ -269,19 +271,6 @@
 	}];
 }
 
-- (IBAction)toggleTasksFiltering:(id)sender {
-	[TTTimeManager sharedInstance].showOnlyMyTasks = ![TTTimeManager sharedInstance].showOnlyMyTasks;
-	[[TTTimeManager sharedInstance] loadAllDataCompletion:^(BOOL success) {
-		if (success) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				NSUserNotification *notification = [[NSUserNotification alloc] init];
-				notification.title = @"TrackingTime is ready";
-				[self postNotification:notification];
-			});
-		}
-	}];
-}
-
 - (IBAction)createNewTask:(NSMenuItem *)sender {
 	NSAlert *alert = [[NSAlert alloc] init];
 	alert.alertStyle = NSAlertStyleInformational;
@@ -293,9 +282,10 @@
 	[alert addButtonWithTitle:@"Only create"];
 	[alert addButtonWithTitle:@"Cancel"];
 	
-	NSNumber *projectUID = sender.representedObject;
-	if ([projectUID isEqual:@(INT_MAX)]) {
-		projectUID = nil;
+	TTProject *project = sender.representedObject;
+	NSNumber *projectUID = nil;
+	if (![project.uid isEqual:@(INT_MAX)]) {
+		projectUID = project.uid;
 	}
 	
 	NSModalResponse button = [alert runModal];
@@ -410,7 +400,7 @@
 		if ([TTTimeManager sharedInstance].currentTrackingEvent) {
 			NSMenuItem *taskItem = [NSMenuItem new];
 			taskItem.enabled = NO;
-			taskItem.title = [NSString stringWithFormat:@"%@ | %@", [TTTimeManager sharedInstance].currentTrackingTask.name, [TTTimeManager sharedInstance].currentTrackingTask.projectName];
+			taskItem.title = [NSString stringWithFormat:@"%@ | %@", [TTTimeManager sharedInstance].currentTrackingTask.name, [TTTimeManager sharedInstance].currentTrackingTask.project.name];
 			[self.menu addItem:taskItem];
 			
 			NSMenuItem *stopItem = [NSMenuItem new];
@@ -423,10 +413,14 @@
 		
 		[self.menu addItem:[NSMenuItem separatorItem]];
 		
-		NSMutableDictionary<NSNumber *, NSMutableArray *> *sortedTasks = [NSMutableDictionary dictionary];
+		NSArray<NSNumber *> *projectIds = [[[NSArray arrayWithObject:@(INT_MAX)] arrayByAddingObjectsFromArray:[[TTTimeManager sharedInstance].allProjects mapWithBlock:^id(TTProject *obj) {
+			return obj.uid;
+		}]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:NO]]];
+		
+		NSMutableDictionary<NSNumber *, NSMutableArray<TTTask *> *> *sortedTasks = [NSMutableDictionary dictionary];
 		NSMutableArray *tasks = [[TTTimeManager sharedInstance].alltasks copy];
 		for (TTTask *task in tasks) {
-			NSNumber *key = task.projectUID? : @(INT_MAX);
+			NSNumber *key = task.project.uid? : @(INT_MAX);
 			NSMutableArray *projectTasks = [sortedTasks objectForKey:key];
 			if (!projectTasks) {
 				projectTasks = [NSMutableArray array];
@@ -435,19 +429,27 @@
 			[projectTasks addObject:task];
 		}
 		
-		NSArray<NSNumber *> *projects = [sortedTasks.allKeys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-			return [obj2 compare:obj1];
-		}];
-		for (NSNumber *project in projects) {
-			NSMutableArray *projectTasks = [sortedTasks objectForKey:project];
+		NSArray *allProjects = [[TTTimeManager sharedInstance].allProjects copy];
+		for (NSNumber *projectId in projectIds) {
+			NSMutableArray<TTTask *> *projectTasks = [sortedTasks objectForKey:projectId]? : [NSMutableArray array];
 			[projectTasks sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"uid" ascending:NO]]];
+			
+			TTProject *project = nil;
+			for (TTProject *pr in allProjects) {
+				if ([pr.uid isEqual:projectId]) {
+					project = pr;
+					break;
+				}
+			}
+			if ([projectId isEqual:@(INT_MAX)]) {
+				project = [TTProject new];
+				project.uid = projectId;
+				project.name = @"No project";
+			}
 			
 			NSMenuItem *projectItem = [NSMenuItem new];
 			projectItem.enabled = YES;
-			projectItem.title = [projectTasks.firstObject projectName];
-			if ([project isEqual:@(INT_MAX)]) {
-				projectItem.title = @"No project";
-			}
+			projectItem.title = project.name;
 			NSMenu *menu = [[NSMenu alloc] init];
 			menu.autoenablesItems = YES;
 			projectItem.submenu = menu;
@@ -473,14 +475,6 @@
 		}
 		
 		[self.menu addItem:[NSMenuItem separatorItem]];
-		
-		NSMenuItem *filterTasksItem = [NSMenuItem new];
-		filterTasksItem.title = @"Show only my tasks";
-		filterTasksItem.enabled = YES;
-		filterTasksItem.target = self;
-		filterTasksItem.action = @selector(toggleTasksFiltering:);
-		filterTasksItem.state = [TTTimeManager sharedInstance].showOnlyMyTasks? NSOnState : NSOffState;
-		[self.menu addItem:filterTasksItem];
 		
 		NSMenuItem *logoutItem = [NSMenuItem new];
 		logoutItem.title = @"Log out";

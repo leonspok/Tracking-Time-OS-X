@@ -15,14 +15,15 @@
 	if ([[json objectForKey:@"name"] isKindOfClass:NSString.class]) {
 		self.name = [json objectForKey:@"name"];
 	}
-	if ([[json objectForKey:@"project"] isKindOfClass:NSString.class]) {
-		self.projectName = [json objectForKey:@"project"];
-	} else {
-		self.projectName = @"<null>";
-	}
+	TTProject *project = nil;
 	if ([[json objectForKey:@"project_id"] isKindOfClass:NSNumber.class]) {
-		self.projectUID = [json objectForKey:@"project_id"];
+		project = [TTProject new];
+		project.uid = [json objectForKey:@"project_id"];
 	}
+	if ([[json objectForKey:@"project"] isKindOfClass:NSString.class]) {
+		project.name = [json objectForKey:@"project"];
+	}
+	self.project = project;
 }
 
 @end

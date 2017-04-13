@@ -7,11 +7,11 @@
 //
 
 #import "TTDataObject.h"
+#import "TTProject.h"
 
 @interface TTTask : TTDataObject
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *projectName;
-@property (nonatomic, strong) NSNumber *projectUID;
+@property (nonatomic, strong) TTProject *project;
 
 @end
