@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E30087D41EE6FAEF00974D2C /* GithubAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = E30087D31EE6FAEF00974D2C /* GithubAPI.m */; };
 		E300CDB11E2F520200D26E68 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDB01E2F520200D26E68 /* AppDelegate.m */; };
 		E300CDB41E2F520200D26E68 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E300CDB31E2F520200D26E68 /* main.m */; };
 		E300CDB61E2F520200D26E68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E300CDB51E2F520200D26E68 /* Assets.xcassets */; };
@@ -31,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E30087D21EE6FAEF00974D2C /* GithubAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GithubAPI.h; sourceTree = "<group>"; };
+		E30087D31EE6FAEF00974D2C /* GithubAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GithubAPI.m; sourceTree = "<group>"; };
 		E300CDAC1E2F520200D26E68 /* Tracking Time.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tracking Time.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E300CDAF1E2F520200D26E68 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E300CDB01E2F520200D26E68 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -134,6 +137,8 @@
 			children = (
 				E300CDC11E2F521D00D26E68 /* TrackingTimeAPI.h */,
 				E300CDC21E2F521D00D26E68 /* TrackingTimeAPI.m */,
+				E30087D21EE6FAEF00974D2C /* GithubAPI.h */,
+				E30087D31EE6FAEF00974D2C /* GithubAPI.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -269,6 +274,7 @@
 			files = (
 				E300CDDF1E2F525B00D26E68 /* NSDictionary+NSURL.m in Sources */,
 				E300CDB41E2F520200D26E68 /* main.m in Sources */,
+				E30087D41EE6FAEF00974D2C /* GithubAPI.m in Sources */,
 				E300CDE31E2F525B00D26E68 /* NSString+IDString.m in Sources */,
 				E300CDB11E2F520200D26E68 /* AppDelegate.m in Sources */,
 				E300CDDE1E2F525B00D26E68 /* NSCharacterSet+QueryParams.m in Sources */,

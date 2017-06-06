@@ -21,6 +21,7 @@
 
 @property (nonatomic, readonly) NSArray<TTProject *> *allProjects;
 @property (nonatomic, readonly) NSArray<TTTask *> *alltasks;
+@property (nonatomic, readonly) NSTimeInterval totalTimeToday;
 
 + (instancetype)sharedInstance;
 

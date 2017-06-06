@@ -13,5 +13,6 @@
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) TTProject *project;
+@property (nonatomic) NSTimeInterval total;
 
 @end

@@ -26,6 +26,9 @@
 
 - (void)logout;
 
+- (void)getTotalTimeForToday:(void (^)(NSTimeInterval total))success
+					 failure:(void (^)(NSError *error))failure;
+
 - (void)getListOfUsers:(void (^)(NSArray<TTUser *> *users))success
 			   failure:(void (^)(NSError *error))failure;
 

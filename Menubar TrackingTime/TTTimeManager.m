@@ -19,6 +19,7 @@
 
 @property (nonatomic, readwrite) NSArray<TTTask *> *alltasks;
 @property (nonatomic, readwrite) NSArray<TTProject *> *allProjects;
+@property (nonatomic, readwrite) NSTimeInterval totalTimeToday;
 
 @property (nonatomic, strong) NSTimer *syncTimer;
 
@@ -58,7 +59,7 @@
 				completion(YES);
 			}
 		} else {
-			NSMutableArray<NSNumber *> *loadedStates = [NSMutableArray arrayWithObjects:@0, @0, @0, nil];
+			NSMutableArray<NSNumber *> *loadedStates = [NSMutableArray arrayWithObjects:@0, @0, @0, @0, nil];
 			
 			void (^callCompletionIfNeeded)() = ^{
 				BOOL success = YES;
@@ -102,21 +103,49 @@
 				loadedStates[2] = @(-1);
 				callCompletionIfNeeded();
 			}];
+			
+			[self.api getTotalTimeForToday:^(NSTimeInterval total) {
+				self.totalTimeToday = total;
+				loadedStates[3] = @1;
+				callCompletionIfNeeded();
+			} failure:^(NSError *error) {
+				loadedStates[3] = @(-1);
+				callCompletionIfNeeded();
+			}];
 		}
 	}];
 }
 
 - (void)loadCurrentTrackingInfoCompletion:(void (^)())completion {
+	NSMutableArray<NSNumber *> *loadedStates = [NSMutableArray arrayWithObjects:@0, @0, nil];
+	void (^callCompletionIfNeeded)() = ^{
+		for (NSNumber *state in loadedStates) {
+			if ([state integerValue] == 0) {
+				return;
+			}
+		}
+		if (completion) {
+			completion();
+		}
+	};
+	
 	[self.api getTrackingTask:^(TTTask *task, TTTrackingEvent *event) {
 		self.currentTrackingEvent = event;
 		self.currentTrackingTask = task;
-		if (completion) {
-			completion();
-		}
+		loadedStates[0] = @1;
+		callCompletionIfNeeded();
 	} failure:^(NSError *error) {
-		if (completion) {
-			completion();
-		}
+		loadedStates[0] = @(-1);
+		callCompletionIfNeeded();
+	}];
+	
+	[self.api getTotalTimeForToday:^(NSTimeInterval total) {
+		self.totalTimeToday = total;
+		loadedStates[1] = @1;
+		callCompletionIfNeeded();
+	} failure:^(NSError *error) {
+		loadedStates[1] = @(-1);
+		callCompletionIfNeeded();
 	}];
 }
 

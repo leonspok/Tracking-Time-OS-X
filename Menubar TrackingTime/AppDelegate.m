@@ -9,8 +9,11 @@
 #import "AppDelegate.h"
 #import "TTTimeManager.h"
 #import "NSArray+Utilities.h"
+#import "GithubAPI.h"
 
 @interface AppDelegate () <NSMenuDelegate, NSUserNotificationCenterDelegate>
+
+@property (nonatomic, strong) GithubAPI *githubAPI;
 
 @property (strong, nonatomic) NSStatusItem *statusItem;
 @property (weak) IBOutlet NSMenu *dummyEditMenu;
@@ -23,6 +26,7 @@
 @property (weak) IBOutlet NSTextField *taskNameTextField;
 
 @property (nonatomic, weak) NSMenuItem *trackingInfoItem;
+@property (nonatomic, weak) NSMenuItem *totalInfoItem;
 @property (nonatomic, strong) NSTimer *trackingInfoTimer;
 @property (nonatomic, strong) NSTimer *reloadInfoTimer;
 @property (nonatomic, strong) NSTimer *reloadTrackingInfoTimer;
@@ -45,12 +49,16 @@
 														   selector:@selector(applicationWillSleep)
 															   name:NSWorkspaceWillSleepNotification object:nil];
 	
+	self.githubAPI = [GithubAPI new];
+	
 	self.trackingInfoTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(setTrackingInfo) userInfo:nil repeats:YES];
 	[[NSRunLoop mainRunLoop] addTimer:self.trackingInfoTimer forMode:NSEventTrackingRunLoopMode];
 	self.reloadInfoTimer = [NSTimer scheduledTimerWithTimeInterval:3*60.0f target:self selector:@selector(reloadInfo) userInfo:nil repeats:YES];
 	[[NSRunLoop mainRunLoop] addTimer:self.reloadInfoTimer forMode:NSEventTrackingRunLoopMode];
 	self.reloadTrackingInfoTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(reloadCurrentTrackingTask) userInfo:nil repeats:YES];
 	[[NSRunLoop mainRunLoop] addTimer:self.reloadTrackingInfoTimer forMode:NSEventTrackingRunLoopMode];
+	
+	[self checkVersion];
 	
 	[[TTTimeManager sharedInstance] loadAllDataCompletion:^(BOOL success) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -79,6 +87,34 @@
 }
 
 #pragma mark Info
+
+- (void)checkVersion {
+	[self.githubAPI getLatestVersionSuccess:^(NSString *version, NSURL *url, NSURL *downloadURL) {
+		NSString *currentVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+		if ([version compare:currentVersion options:NSNumericSearch] == NSOrderedDescending) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				NSAlert *alert = [NSAlert new];
+				[alert setMessageText:@"New version is available"];
+				[alert setInformativeText:[NSString stringWithFormat:@"Your version is %@. Now latest version is %@.", currentVersion, version]];
+				[alert addButtonWithTitle:@"Download"];
+				[alert addButtonWithTitle:@"Open on GitHub"];
+				[alert addButtonWithTitle:@"Cancel"];
+				[alert setAlertStyle:NSAlertStyleWarning];
+				NSInteger response = [alert runModal];
+				switch (response) {
+					case 1000:
+						[[NSWorkspace sharedWorkspace] openURL:downloadURL];
+						break;
+					case 1001:
+						[[NSWorkspace sharedWorkspace] openURL:url];
+						break;
+					default:
+						break;
+				}
+			});
+		}
+	} failure:nil];
+}
 
 - (void)reloadCurrentTrackingTask {
 	BOOL wasTracking = [TTTimeManager sharedInstance].currentTrackingEvent != nil;
@@ -125,20 +161,27 @@
 - (void)setTrackingInfo {
 	[self stopTrackingIfNeeded];
 	if ([TTTimeManager sharedInstance].currentTrackingEvent) {
-		NSInteger seconds = round([[NSDate date] timeIntervalSinceDate:[TTTimeManager sharedInstance].currentTrackingEvent.dateStart]);
-		self.trackingInfoItem.title = [NSString stringWithFormat:@"%02d:%02d:%02d", (int)seconds/3600, (int)(seconds%3600)/60, (int)seconds%60];
+		NSInteger currentTrackingSeconds = round([[NSDate date] timeIntervalSinceDate:[TTTimeManager sharedInstance].currentTrackingEvent.dateStart]);
+		NSInteger taskTotalSeconds = round([TTTimeManager sharedInstance].currentTrackingTask.total);
+		self.trackingInfoItem.title = [NSString stringWithFormat:@"Time: %02d:%02d:%02d (total %02d:%02d)", (int)currentTrackingSeconds/3600, (int)(currentTrackingSeconds%3600)/60, (int)currentTrackingSeconds%60, (int)taskTotalSeconds/3600, (int)(taskTotalSeconds%3600)/60];
+		NSInteger totalTodaySeconds = round([TTTimeManager sharedInstance].totalTimeToday);
+		self.totalInfoItem.title = [NSString stringWithFormat:@"Today: %02d:%02d", (int)totalTodaySeconds/3600, (int)(totalTodaySeconds%3600)/60];
+		
 		NSImage *menuBarLogo = [NSImage imageNamed:@"stopIcon"];
 		[menuBarLogo setTemplate:YES];
 		self.statusItem.image = menuBarLogo;
-		if (seconds < 60) {
-			self.statusItem.title = [NSString stringWithFormat:@"%lds", (long)seconds];
-		} else if (seconds < 3600) {
-			self.statusItem.title = [NSString stringWithFormat:@"%ldm", (long)seconds/60];
+		if (currentTrackingSeconds < 60) {
+			self.statusItem.title = [NSString stringWithFormat:@"%lds", (long)currentTrackingSeconds];
+		} else if (currentTrackingSeconds < 3600) {
+			self.statusItem.title = [NSString stringWithFormat:@"%ldm", (long)currentTrackingSeconds/60];
 		} else {
-			self.statusItem.title = [NSString stringWithFormat:@"%ldh%ldm", (long)seconds/3600, (long)(seconds%3600)/60];
+			self.statusItem.title = [NSString stringWithFormat:@"%ldh%ldm", (long)currentTrackingSeconds/3600, (long)(currentTrackingSeconds%3600)/60];
 		}
 	} else {
 		self.trackingInfoItem.title = @"No tracking";
+		NSInteger totalTodaySeconds = round([TTTimeManager sharedInstance].totalTimeToday);
+		self.totalInfoItem.title = [NSString stringWithFormat:@"%02d:%02d:%02d", (int)totalTodaySeconds/3600, (int)(totalTodaySeconds%3600)/60, (int)totalTodaySeconds%60];
+		
 		NSImage *menuBarLogo = [NSImage imageNamed:@"startIcon"];
 		[menuBarLogo setTemplate:YES];
 		self.statusItem.image = menuBarLogo;
@@ -395,13 +438,16 @@
 		[self.menu addItem:item];
 		self.trackingInfoItem = item;
 		
-		[self setTrackingInfo];
-		
 		if ([TTTimeManager sharedInstance].currentTrackingEvent) {
-			NSMenuItem *taskItem = [NSMenuItem new];
-			taskItem.enabled = NO;
-			taskItem.title = [NSString stringWithFormat:@"%@ | %@", [TTTimeManager sharedInstance].currentTrackingTask.name, [TTTimeManager sharedInstance].currentTrackingTask.project.name];
-			[self.menu addItem:taskItem];
+			NSMenuItem *taskTitleItem = [NSMenuItem new];
+			taskTitleItem.enabled = NO;
+			taskTitleItem.title = [NSString stringWithFormat:@"Task: %@", [TTTimeManager sharedInstance].currentTrackingTask.name];
+			[self.menu addItem:taskTitleItem];
+			
+			NSMenuItem *projectTitleItem = [NSMenuItem new];
+			projectTitleItem.enabled = NO;
+			projectTitleItem.title = [NSString stringWithFormat:@"Project: %@", [TTTimeManager sharedInstance].currentTrackingTask.project.name];
+			[self.menu addItem:projectTitleItem];
 			
 			NSMenuItem *stopItem = [NSMenuItem new];
 			stopItem.title = @"Stop tracking";
@@ -410,6 +456,14 @@
 			stopItem.action = @selector(stopTracking:);
 			[self.menu addItem:stopItem];
 		}
+		[self.menu addItem:[NSMenuItem separatorItem]];
+		
+		NSMenuItem *totalItem = [NSMenuItem new];
+		totalItem.enabled = NO;
+		[self.menu addItem:totalItem];
+		self.totalInfoItem = totalItem;
+		
+		[self setTrackingInfo];
 		
 		[self.menu addItem:[NSMenuItem separatorItem]];
 		

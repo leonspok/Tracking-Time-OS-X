@@ -15,6 +15,9 @@
 	if ([[json objectForKey:@"name"] isKindOfClass:NSString.class]) {
 		self.name = [json objectForKey:@"name"];
 	}
+	if ([[json objectForKey:@"worked_hours"] isKindOfClass:NSNumber.class]) {
+		self.total = [[json objectForKey:@"worked_hours"] doubleValue]*3600;
+	}
 	TTProject *project = nil;
 	if ([[json objectForKey:@"project_id"] isKindOfClass:NSNumber.class]) {
 		project = [TTProject new];

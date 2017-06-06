@@ -84,8 +84,6 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 			}
 		}
 	} failure:^(NSError *error) {
-		self.authedUserEmail = nil;
-		self.authorizationToken = nil;
 		if (completion) {
 			completion(NO);
 		}
@@ -137,6 +135,43 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 	self.authedUserEmail = nil;
 	self.authorizationToken = nil;
 	self.authedUser = nil;
+}
+
+- (void)getTotalTimeForToday:(void (^)(NSTimeInterval total))success
+					 failure:(void (^)(NSError *error))failure {
+	NSMutableURLRequest *request = [self requestWithMethod:@"GET" url:[NSURL URLWithString:[NSString stringWithFormat:@"%@/dashboard/team_hours", kBaseURL]] params:@{@"filter": @"TODAY"}];
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		if (error) {
+			if (failure) {
+				failure(error);
+			}
+		} else {
+			NSError *jsonError;
+			NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+			if (jsonError) {
+				if (failure) {
+					failure(jsonError);
+				}
+			} else {
+				if ([[json objectForKey:@"response"] isKindOfClass:NSDictionary.class]) {
+					NSDictionary *response = [json objectForKey:@"response"];
+					if (![[response objectForKey:@"status"] isEqual:@200]) {
+						if (failure) {
+							failure([NSError errorWithDomain:NSStringFromClass(self.class) code:[[response objectForKey:@"status"] integerValue] userInfo:response]);
+						}
+						return;
+					}
+					
+					NSDictionary *userJSON = [[[[json objectForKey:@"data"] objectForKey:@"users"] filterWithBlock:^BOOL(NSDictionary *obj) {
+						return [[obj objectForKey:@"id"] isEqual:self.authedUser.uid];
+					}] firstObject];
+					if (success) {
+						success([[userJSON objectForKey:@"worked_hours"] doubleValue]*3600);
+					}
+				}
+			}
+		}
+	}] resume];
 }
 
 - (void)getListOfUsers:(void (^)(NSArray<TTUser *> *users))success
