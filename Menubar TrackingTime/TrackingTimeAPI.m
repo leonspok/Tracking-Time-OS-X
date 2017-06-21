@@ -372,8 +372,14 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 						if ([[data objectForKey:@"projects"] isKindOfClass:NSArray.class]) {
 							NSArray *projects = [data objectForKey:@"projects"];
 							if (projects.count > 0) {
-								NSDictionary *project = [projects firstObject];
-								if ([[project objectForKey:@"tasks"] isKindOfClass:NSArray.class]) {
+								NSDictionary *project = nil;;
+								for (NSDictionary *p in projects) {
+									if ([[p objectForKey:@"tasks"] isKindOfClass:NSArray.class] && [[p objectForKey:@"tasks"] count] > 0) {
+										project = p;
+										break;
+									}
+								}
+								if (project) {
 									NSArray *tasks = [project objectForKey:@"tasks"];
 									if (tasks.count > 0) {
 										NSDictionary *taskDict = [tasks firstObject];

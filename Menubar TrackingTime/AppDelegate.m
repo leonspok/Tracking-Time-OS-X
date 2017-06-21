@@ -180,7 +180,7 @@
 	} else {
 		self.trackingInfoItem.title = @"No tracking";
 		NSInteger totalTodaySeconds = round([TTTimeManager sharedInstance].totalTimeToday);
-		self.totalInfoItem.title = [NSString stringWithFormat:@"%02d:%02d:%02d", (int)totalTodaySeconds/3600, (int)(totalTodaySeconds%3600)/60, (int)totalTodaySeconds%60];
+		self.totalInfoItem.title = [NSString stringWithFormat:@"Today: %02d:%02d", (int)totalTodaySeconds/3600, (int)(totalTodaySeconds%3600)/60];
 		
 		NSImage *menuBarLogo = [NSImage imageNamed:@"startIcon"];
 		[menuBarLogo setTemplate:YES];
