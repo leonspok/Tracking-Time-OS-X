@@ -50,6 +50,10 @@
 				   success:(void (^)(TTTask *task))success
 				   failure:(void (^)(NSError *error))failure;
 
+- (void)closeTask:(TTTask *)task
+		  success:(void (^)())success
+		  failure:(void (^)(NSError *error))failure;
+
 - (void)startTrackingTask:(TTTask *)task
 				  success:(void (^)(TTTrackingEvent *event))success
 				  failure:(void (^)(NSError *error))failure;

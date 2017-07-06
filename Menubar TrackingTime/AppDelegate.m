@@ -314,6 +314,30 @@
 	}];
 }
 
+- (IBAction)closeTask:(NSMenuItem *)sender {
+	TTTask *task = sender.representedObject;
+	[[TTTimeManager sharedInstance] closeTask:task success:^{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			NSUserNotification *notification = [[NSUserNotification alloc] init];
+			notification.informativeText = @"Task closed";
+			notification.title = task.name;
+			[self postNotification:notification];
+		});
+	} failure:^(NSError *error) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.alertStyle = NSAlertStyleWarning;
+			[alert setMessageText:@"Error"];
+			[alert setInformativeText:@"Can't close task"];
+			[alert addButtonWithTitle:@"Try again"];
+			[alert addButtonWithTitle:@"Cancel"];
+			if ([alert runModal] == 0) {
+				[self startTracking:sender];
+			}
+		});
+	}];
+}
+
 - (IBAction)createNewTask:(NSMenuItem *)sender {
 	NSAlert *alert = [[NSAlert alloc] init];
 	alert.alertStyle = NSAlertStyleInformational;
@@ -450,7 +474,7 @@
 			[self.menu addItem:projectTitleItem];
 			
 			NSMenuItem *stopItem = [NSMenuItem new];
-			stopItem.title = @"Stop tracking";
+			stopItem.title = @"◼︎ Stop tracking";
 			stopItem.enabled = YES;
 			stopItem.target = self;
 			stopItem.action = @selector(stopTracking:);
@@ -512,10 +536,25 @@
 			for (TTTask *task in projectTasks) {
 				NSMenuItem *taskItem = [NSMenuItem new];
 				taskItem.title = task.name;
-				taskItem.representedObject = task;
-				taskItem.target = self;
-				taskItem.action = @selector(startTracking:);
 				[projectItem.submenu addItem:taskItem];
+				
+				NSMenu *menu = [NSMenu new];
+				menu.autoenablesItems = YES;
+				taskItem.submenu = menu;
+				
+				NSMenuItem *startTrackingItem = [NSMenuItem new];
+				startTrackingItem.title = @"▶︎ Start";
+				startTrackingItem.representedObject = task;
+				startTrackingItem.target = self;
+				startTrackingItem.action = @selector(startTracking:);
+				[taskItem.submenu addItem:startTrackingItem];
+				
+				NSMenuItem *closeItem = [NSMenuItem new];
+				closeItem.title = @"✕ Close";
+				closeItem.representedObject = task;
+				closeItem.target = self;
+				closeItem.action = @selector(closeTask:);
+				[taskItem.submenu addItem:closeItem];
 			}
 			
 			[projectItem.submenu addItem:[NSMenuItem separatorItem]];
