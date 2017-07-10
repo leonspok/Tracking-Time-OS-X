@@ -507,6 +507,98 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 	}] resume];
 }
 
+- (void)renameTask:(TTTask *)task
+				to:(NSString *)newName
+		   success:(void (^)())success
+		   failure:(void (^)(NSError *error))failure {
+	if (!task.uid) {
+		if (failure) {
+			failure([NSError errorWithDomain:NSStringFromClass(self.class) code:1 userInfo:@{@"message": @"no task"}]);
+		}
+		return;
+	}
+	
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/tasks/update/%@", kBaseURL, [task.uid stringValue]]];
+	
+	NSDictionary *params = @{@"id": task.uid,
+							 @"name": newName};
+	
+	NSURLRequest *request = [self requestWithMethod:@"GET" url:url params:params];
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		if (error) {
+			if (failure) {
+				failure(error);
+			}
+		} else {
+			NSError *jsonError;
+			NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+			if (jsonError) {
+				if (failure) {
+					failure(jsonError);
+				}
+			} else {
+				if ([[json objectForKey:@"response"] isKindOfClass:NSDictionary.class]) {
+					NSDictionary *response = [json objectForKey:@"response"];
+					if (![[response objectForKey:@"status"] isEqual:@200]) {
+						if (failure) {
+							failure([NSError errorWithDomain:NSStringFromClass(self.class) code:[[response objectForKey:@"status"] integerValue] userInfo:response]);
+						}
+						return;
+					}
+					task.name = newName;
+					if (success) {
+						success();
+					}
+				}
+			}
+		}
+	}] resume];
+}
+
+- (void)deleteTask:(TTTask *)task
+		   success:(void (^)())success
+		   failure:(void (^)(NSError *error))failure {
+	if (!task.uid) {
+		if (failure) {
+			failure([NSError errorWithDomain:NSStringFromClass(self.class) code:1 userInfo:@{@"message": @"no task"}]);
+		}
+		return;
+	}
+	
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/tasks/delete/%@", kBaseURL, [task.uid stringValue]]];
+	
+	NSURLRequest *request = [self requestWithMethod:@"GET" url:url params:nil];
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		if (error) {
+			if (failure) {
+				failure(error);
+			}
+		} else {
+			NSError *jsonError;
+			NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+			if (jsonError) {
+				if (failure) {
+					failure(jsonError);
+				}
+			} else {
+				if ([[json objectForKey:@"response"] isKindOfClass:NSDictionary.class]) {
+					NSDictionary *response = [json objectForKey:@"response"];
+					if (![[response objectForKey:@"status"] isEqual:@200]) {
+						if (failure) {
+							failure([NSError errorWithDomain:NSStringFromClass(self.class) code:[[response objectForKey:@"status"] integerValue] userInfo:response]);
+						}
+						return;
+					}
+					
+					if (success) {
+						success();
+					}
+				}
+			}
+		}
+	}] resume];
+}
+
 - (void)startTrackingTask:(TTTask *)task
 				  success:(void (^)(TTTrackingEvent *event))success
 				  failure:(void (^)(NSError *error))failure {

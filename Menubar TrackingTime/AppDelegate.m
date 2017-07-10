@@ -291,6 +291,7 @@
 }
 
 - (IBAction)startTracking:(NSMenuItem *)sender {
+	[self checkVersion];
 	TTTask *task = sender.representedObject;
 	[[TTTimeManager sharedInstance] startTracking:task success:^{
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -316,6 +317,9 @@
 
 - (IBAction)closeTask:(NSMenuItem *)sender {
 	TTTask *task = sender.representedObject;
+	if ([task isEqual:[TTTimeManager sharedInstance].currentTrackingTask]) {
+		[self stopTracking:nil];
+	}
 	[[TTTimeManager sharedInstance] closeTask:task success:^{
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSUserNotification *notification = [[NSUserNotification alloc] init];
@@ -399,6 +403,75 @@
 				alert.alertStyle = NSAlertStyleWarning;
 				[alert setMessageText:@"Error"];
 				[alert setInformativeText:@"Can't create task"];
+				[alert addButtonWithTitle:@"OK"];
+				[alert runModal];
+			});
+		}];
+	}
+}
+
+- (IBAction)renameTask:(NSMenuItem *)sender {
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.alertStyle = NSAlertStyleInformational;
+	[alert setMessageText:@"Rename task"];
+	[alert setInformativeText:@"Enter new name for the task:"];
+	self.taskNameTextField.stringValue = [sender.representedObject name];
+	[alert setAccessoryView:self.taskNameTextField];
+	[alert addButtonWithTitle:@"Save"];
+	[alert addButtonWithTitle:@"Cancel"];
+	
+	TTTask *task = sender.representedObject;
+	
+	NSModalResponse button = [alert runModal];
+	if (button == NSAlertFirstButtonReturn && self.taskNameTextField.stringValue.length > 0) {
+		[[TTTimeManager sharedInstance] renameTask:task to:self.taskNameTextField.stringValue success:^{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				NSUserNotification *notification = [[NSUserNotification alloc] init];
+				notification.informativeText = @"Task was renamed";
+				notification.title = task.name;
+				[self postNotification:notification];
+			});
+		} failure:^(NSError *error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				NSAlert *alert = [[NSAlert alloc] init];
+				alert.alertStyle = NSAlertStyleWarning;
+				[alert setMessageText:@"Error"];
+				[alert setInformativeText:@"Can't rename task"];
+				[alert addButtonWithTitle:@"OK"];
+				[alert runModal];
+			});
+		}];
+	}
+}
+
+- (IBAction)deleteTask:(NSMenuItem *)sender {
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.alertStyle = NSAlertStyleInformational;
+	[alert setMessageText:@"Are you sure?"];
+	[alert setInformativeText:@"All time entries will be removed also"];
+	[alert addButtonWithTitle:@"Yes"];
+	[alert addButtonWithTitle:@"Cancel"];
+	
+	TTTask *task = sender.representedObject;
+	if ([task isEqual:[TTTimeManager sharedInstance].currentTrackingTask]) {
+		[self stopTracking:nil];
+	}
+	
+	NSModalResponse button = [alert runModal];
+	if (button == NSAlertFirstButtonReturn) {
+		[[TTTimeManager sharedInstance] deleteTask:task success:^{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				NSUserNotification *notification = [[NSUserNotification alloc] init];
+				notification.informativeText = @"Task was removed";
+				notification.title = task.name;
+				[self postNotification:notification];
+			});
+		} failure:^(NSError *error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				NSAlert *alert = [[NSAlert alloc] init];
+				alert.alertStyle = NSAlertStyleWarning;
+				[alert setMessageText:@"Error"];
+				[alert setInformativeText:@"Can't remove task"];
 				[alert addButtonWithTitle:@"OK"];
 				[alert runModal];
 			});
@@ -550,11 +623,25 @@
 				[taskItem.submenu addItem:startTrackingItem];
 				
 				NSMenuItem *closeItem = [NSMenuItem new];
-				closeItem.title = @"✕ Close";
+				closeItem.title = @"◼︎ Close";
 				closeItem.representedObject = task;
 				closeItem.target = self;
 				closeItem.action = @selector(closeTask:);
 				[taskItem.submenu addItem:closeItem];
+				
+				NSMenuItem *renameItem = [NSMenuItem new];
+				renameItem.title = @"✎ Rename";
+				renameItem.representedObject = task;
+				renameItem.target = self;
+				renameItem.action = @selector(renameTask:);
+				[taskItem.submenu addItem:renameItem];
+				
+				NSMenuItem *deleteItem = [NSMenuItem new];
+				deleteItem.title = @"✕ Delete";
+				deleteItem.representedObject = task;
+				deleteItem.target = self;
+				deleteItem.action = @selector(deleteTask:);
+				[taskItem.submenu addItem:deleteItem];
 			}
 			
 			[projectItem.submenu addItem:[NSMenuItem separatorItem]];

@@ -218,6 +218,37 @@
 	} failure:failure];
 }
 
+- (void)renameTask:(TTTask *)task
+				to:(NSString *)newName
+		   success:(void (^)())success
+		   failure:(void (^)(NSError *error))failure {
+	[self.api renameTask:task to:newName success:success failure:failure];
+}
+
+- (void)deleteTask:(TTTask *)task
+		   success:(void (^)())success
+		   failure:(void (^)(NSError *error))failure {
+	[self.api deleteTask:task success:^{
+		if ([task isEqual:self.currentTrackingTask]) {
+			self.currentTrackingTask = nil;
+			self.currentTrackingEvent = nil;
+			self.lastSyncTimerDate = nil;
+		}
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (self.syncTimer) {
+				[self.syncTimer invalidate];
+				self.syncTimer = nil;
+			}
+		});
+		NSMutableArray<TTTask *> *tasks = [self.alltasks mutableCopy];
+		[tasks removeObject:task];
+		self.alltasks = tasks;
+		if (success) {
+			success();
+		}
+	} failure:failure];
+}
+
 - (void)stopTrackingAtTime:(NSDate *)time
 				   success:(void (^)())success
 				   failure:(void (^)(NSError *error))failure {

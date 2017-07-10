@@ -38,6 +38,15 @@
 		  success:(void (^)())success
 		  failure:(void (^)(NSError *error))failure;
 
+- (void)renameTask:(TTTask *)task
+				to:(NSString *)newName
+		   success:(void (^)())success
+		   failure:(void (^)(NSError *error))failure;
+
+- (void)deleteTask:(TTTask *)task
+		   success:(void (^)())success
+		   failure:(void (^)(NSError *error))failure;
+
 - (void)startTracking:(TTTask *)task
 			  success:(void (^)())success
 			  failure:(void (^)(NSError *error))failure;
