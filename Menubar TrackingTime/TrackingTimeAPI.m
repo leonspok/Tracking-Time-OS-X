@@ -10,7 +10,7 @@
 #import "LPHTTPRequestSerializer.h"
 #import "NSArray+Utilities.h"
 
-static NSString *const kBaseURL = @"https://app.trackingtime.co/api/v3";
+static NSString *const kBaseURL = @"https://app.trackingtime.co/api/v4";
 
 static NSString *const kAuthTokenUserDefaultsKey = @"auth_token";
 static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
@@ -390,6 +390,13 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 												success(task, event);
 											}
 											return;
+										} else {
+											[self getTrackingEventForTask:task success:^(TTTrackingEvent *event) {
+												if (success) {
+													success(task, event);
+												}
+											} failure:failure];
+											return;
 										}
 									}
 								}
@@ -400,6 +407,65 @@ static NSString *const kAuthedUserEmailUserDefaultsKey = @"authed_user_email";
 					if (success) {
 						success(nil, nil);
 					}
+				}
+			}
+		}
+	}] resume];
+}
+
+- (void)getTrackingEventForTask:(TTTask *)task
+						success:(void (^)(TTTrackingEvent *event))success
+						failure:(void (^)(NSError *error))failure {
+	if (!task.uid) {
+		if (failure) {
+			failure([NSError errorWithDomain:NSStringFromClass(self.class) code:1 userInfo:@{@"message": @"no authed user"}]);
+		}
+		return;
+	}
+	
+	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+	NSDateComponents *components = [NSDateComponents new];
+	components.year = -6;
+	NSDate *fromDate = [calendar dateByAddingComponents:components toDate:[NSDate date] options:0];
+	components.year = 6;
+	NSDate *toDate = [calendar dateByAddingComponents:components toDate:[NSDate date] options:0];
+	
+	NSDateFormatter *formatter = [NSDateFormatter new];
+	[formatter setDateFormat:@"yyyy-MM-dd"];
+	
+	NSMutableURLRequest *request = [self requestWithMethod:@"GET" url:[NSURL URLWithString:[NSString stringWithFormat:@"%@/events", kBaseURL]] params:@{@"filter": @"TASK", @"id": task.uid, @"order": @"desc", @"from": [formatter stringFromDate:fromDate], @"to": [formatter stringFromDate:toDate], @"page": @0, @"page_size": @1}];
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		if (error) {
+			if (failure) {
+				failure(error);
+			}
+		} else {
+			NSError *jsonError;
+			NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+			if (jsonError) {
+				if (failure) {
+					failure(jsonError);
+				}
+			} else {
+				if ([[json objectForKey:@"response"] isKindOfClass:NSDictionary.class]) {
+					NSDictionary *response = [json objectForKey:@"response"];
+					if (![[response objectForKey:@"status"] isEqual:@200]) {
+						if (failure) {
+							failure([NSError errorWithDomain:NSStringFromClass(self.class) code:[[response objectForKey:@"status"] integerValue] userInfo:response]);
+						}
+						return;
+					}
+					
+					if ([[json objectForKey:@"data"] isKindOfClass:NSArray.class] && [[json objectForKey:@"data"] count] > 0) {
+						if (success) {
+							success([[TTTrackingEvent alloc] initWithJSON:[[json objectForKey:@"data"] firstObject]]);
+						}
+						return;
+					}
+				}
+					
+				if (success) {
+					success(nil);
 				}
 			}
 		}
